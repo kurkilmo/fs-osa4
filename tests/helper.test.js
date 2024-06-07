@@ -46,3 +46,29 @@ describe('favorite blog', () => {
     assert.strictEqual(fav.likes, 10)
   })
 })
+
+describe('most blogs', () => {
+  test('of empty list is null', () => {
+    const blogs = []
+    assert.strictEqual(listHelper.mostBlogs(blogs), null)
+  })
+
+  test('when list has only one author is the author of that', () => {
+    const blogs = [
+      {
+        _id: '5a422a851b54a676234d17f7',
+        title: 'React patterns',
+        author: 'Michael Chan',
+        url: 'https://reactpatterns.com/',
+        likes: 7,
+        __v: 0
+      }
+    ]
+    assert.strictEqual(listHelper.mostBlogs(blogs), 'Michael Chan')
+  })
+
+  test('of a bigger list is returned right', () =>  {
+    const blogs = listHelper.exampleBlogs
+    assert.strictEqual(listHelper.mostBlogs(blogs), 'Robert C. Martin')
+  })
+})
