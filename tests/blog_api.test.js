@@ -63,6 +63,38 @@ describe('note-api', () => {
     assert.strictEqual(result.body.likes, 0)
   })
 
+  test('missing title returns 400', async () => {
+    const newBlog = {
+      author: 'tuure',
+      url: 'http.cat',
+      likes: 200
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+
+    const blogsInEnd = await helper.blogsInDb()
+    assert.strictEqual(blogsInEnd.length, helper.initialBlogs.length)
+  })
+
+  test('missing url returns 400', async () => {
+    const newBlog = {
+      title: 'titteli',
+      author: 'tuure',
+      likes: 200
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+
+    const blogsInEnd = await helper.blogsInDb()
+    assert.strictEqual(blogsInEnd.length, helper.initialBlogs.length)
+  })
+
   after(async () => {
     await mongoose.connection.close()
   })
