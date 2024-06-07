@@ -51,6 +51,18 @@ describe('note-api', () => {
     assert.deepStrictEqual(lastBlog, { id: lastBlog.id, ...newBlog })
   })
 
+  test('unspecified likes are set to 0', async () => {
+    const newBlog = {
+      title: 'titteli',
+      author: 'tuure',
+      url: 'http.cat'
+    }
+    const result = await api
+      .post('/api/blogs')
+      .send(newBlog)
+    assert.strictEqual(result.body.likes, 0)
+  })
+
   after(async () => {
     await mongoose.connection.close()
   })
