@@ -31,6 +31,26 @@ describe('note-api', () => {
     assert(resp.body[0].id)
   })
 
+  test('blogs can be added', async () => {
+    const newBlog = {
+      title: 'titteli',
+      author: 'tuure',
+      url: 'http.cat',
+      likes: 200
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    const blogsInEnd = await helper.blogsInDb()
+    assert.strictEqual(blogsInEnd.length, helper.initialBlogs.length + 1)
+    const lastBlog = blogsInEnd.pop()
+    assert.deepStrictEqual(lastBlog, { id: lastBlog.id, ...newBlog })
+  })
+
   after(async () => {
     await mongoose.connection.close()
   })
