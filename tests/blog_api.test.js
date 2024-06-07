@@ -26,6 +26,11 @@ describe('note-api', () => {
     assert.strictEqual(resp.body.length, helper.initialBlogs.length)
   })
 
+  test('blogs have a property \'id\'', async () => {
+    const resp = await api.get('/api/blogs')
+    assert(resp.body[0].id)
+  })
+
   after(async () => {
     await mongoose.connection.close()
   })
