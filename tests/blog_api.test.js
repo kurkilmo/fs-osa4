@@ -110,6 +110,22 @@ describe('note-api', () => {
     assert(!ids.includes(blogToDelete.id))
   })
 
+  test('blogs can be updated', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToUpdate = blogsAtStart[0]
+    blogToUpdate.title = 'Updated title'
+
+    const updatedBlog = await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(blogToUpdate)
+      .expect(200)
+
+    assert.strictEqual(updatedBlog.body.title, blogToUpdate.title)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
+  })
+
   after(async () => {
     await mongoose.connection.close()
   })
