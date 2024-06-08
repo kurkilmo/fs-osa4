@@ -5,12 +5,24 @@ const supertest = require('supertest')
 const app = require('../app')
 const Blog = require('../models/blog')
 const helper = require('./test_helper')
+const bcrypt = require('bcrypt')
+const User = require('../models/user')
 
 const api = supertest(app)
 
 beforeEach(async () => {
   await Blog.deleteMany({})
   await Blog.insertMany(helper.initialBlogs)
+
+  await User.deleteMany({})
+
+  const passwordHash = await bcrypt.hash('salasana', 10)
+  const user = new User({
+    username: 'tunnus',
+    name: 'nimi',
+    passwordHash })
+
+  await user.save()
 })
 
 describe('blog-api', () => {
@@ -48,7 +60,7 @@ describe('blog-api', () => {
     const blogsInEnd = await helper.blogsInDb()
     assert.strictEqual(blogsInEnd.length, helper.initialBlogs.length + 1)
     const lastBlog = blogsInEnd.pop()
-    assert.deepStrictEqual(lastBlog, { id: lastBlog.id, ...newBlog })
+    assert.deepStrictEqual(lastBlog, { id: lastBlog.id, user: lastBlog.user, ...newBlog })
   })
 
   test('unspecified likes are set to 0', async () => {
