@@ -13,7 +13,7 @@ beforeEach(async () => {
   await Blog.insertMany(helper.initialBlogs)
 })
 
-describe('note-api', () => {
+describe('blog-api', () => {
   test('blogs are in JSON form', async () => {
     await api
       .get('/api/blogs')
