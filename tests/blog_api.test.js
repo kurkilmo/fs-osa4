@@ -188,21 +188,6 @@ describe('blog-api', () => {
       const blogsAtEnd = await helper.blogsInDb()
       assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
     })
-
-    test('blogs aren\'t updated with wrong auth', async () => {
-      const blogsAtStart = await helper.blogsInDb()
-      const blogToUpdate = blogsAtStart[0]
-      blogToUpdate.title = 'Updated title 2'
-
-      await login(1)
-      const result = await api
-        .put(`/api/blogs/${blogToUpdate.id}`)
-        .set('Authorization', token)
-        .send(blogToUpdate)
-        .expect(401)
-
-      assert(result.body.error.includes('you don\'t have permission to modify this blog'))
-    })
   })
 
   after(async () => {
